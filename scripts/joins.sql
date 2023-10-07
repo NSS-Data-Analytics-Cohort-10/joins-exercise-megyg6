@@ -36,7 +36,7 @@ FROM rating
 
 SELECT specs.release_year, AVG(imdb_rating) AS avg_rating
 FROM specs
-JOIN rating 
+LEFT JOIN rating 
 ON specs.movie_id = rating.movie_id
 GROUP BY specs.release_year
 ORDER BY avg_rating DESC;
@@ -52,12 +52,13 @@ FROM revenue;
  
 SELECT film_title ,mpaa_rating, worldwide_gross, company_name
 FROM specs
-LEFT JOIN revenue
+INNER JOIN revenue
 ON specs.movie_id=revenue.movie_id
-RIGHT JOIN distributors
+INNER JOIN distributors
 ON specs.domestic_distributor_id= distributors.distributor_id
 WHERE mpaa_rating='G'
-ORDER BY worldwide_gross DESC;
+ORDER BY worldwide_gross DESC
+LIMIT 1;
 
 ---ANSWER: Toy Story 4 distributed by Walt Disney
 
@@ -66,9 +67,32 @@ ORDER BY worldwide_gross DESC;
 -- 4. Write a query that returns, for each distributor in the distributors table, the distributor name and the number of movies associated with that distributor in the movies 
 -- table. Your result set should include all of the distributors, whether or not they have any movies in the movies table.
 
+SELECT *
+FROM distributors
+
+-------------------------------
+
+SELECT company_name AS distributor_name, COUNT(movie_id)
+FROM distributors 
+FULL JOIN specs
+ON distributors.distributor_id=specs.domestic_distributor_id
+GROUP BY company_name;
+
 
 
 -- 5. Write a query that returns the five distributors with the highest average movie budget.
+SELECT company_name, AVG(revenue.film_budget)
+FROM specs
+INNER JOIN distributors
+ON specs.domestic_distributor_id=distributors.distributor_id
+INNER JOIN revenue
+ON specs.movie_id = revenue.movie_id
+GROUP BY company_name
+ORDER BY AVG(revenue.film_budget) DESC
+LIMIT 5;
+
+--ANSWER Walt Disney, Sony PIctures, Lionsgate, Dreamworks, Warner Bros.
+
 
 -- 6. How many movies in the dataset are distributed by a company which is not headquartered in California? Which of these movies has the highest imdb rating?
 

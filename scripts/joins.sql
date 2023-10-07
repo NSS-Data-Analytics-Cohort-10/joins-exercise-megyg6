@@ -87,7 +87,7 @@ INNER JOIN distributors
 ON specs.domestic_distributor_id=distributors.distributor_id
 INNER JOIN revenue
 ON specs.movie_id = revenue.movie_id
-GROUP BY company_name
+GROUP BY company_name 
 ORDER BY AVG(revenue.film_budget) DESC
 LIMIT 5;
 

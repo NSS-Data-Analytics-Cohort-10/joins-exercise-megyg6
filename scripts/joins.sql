@@ -128,7 +128,14 @@ ON specs.movie_id=rating.movie_id
 WHERE length_in_min>=121
 --ANSWER movies that were over 2 hrs had and avg imdb rating of 7.3
 
- 
+SELECT 
+	CASE WHEN length_in_min >120 THEN 'over_2_hrs'
+	ELSE 'under_2_hrs'
+	END AS category, ROUND(AVG(imdb_rating),1)
+FROM specs
+INNER JOIN rating
+ON specs.movie_id=rating.movie_id
+GROUP BY category;
 
 	
 
